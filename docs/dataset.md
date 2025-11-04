@@ -3,9 +3,9 @@
 ## Dataset v1 (Current)
 
 **Preprocessing rules:**
-- Studio/rig images (1440×1080): Crop Y=[480:992] (512 px from lower part)
-- Other landscape images: Take top 512 px
-- Portrait/iPhone images: Center-crop 512 px vertically
+- **Fall 1 - Studio/rig images** (exakt 1440×1080): Crop Y=[480:992] (512 px from lower part)
+- **Fall 2 - High-res images** (min(h,w) ≥ 2000, iPhone/DSLR): Center-crop 512 px vertically
+- **Fall 3 - Other images**: Take top 512 px
 - All images resized to: 480×170
 
 **Source images:**
