@@ -52,12 +52,14 @@ See `docs/pi_setup.md` for detailed Pi setup instructions.
 
 ## Image Processing Pipeline
 
-**Source format:**
-- Original images: 1440×1080
+**Source formats:**
+- Studio/rig images: 1440×1080 → crop Y=[480:992] (512 px from lower part)
+- Other landscape: top 512 px
+- Portrait/iPhone: center-crop 512 px vertically
 
 **Preprocessing:**
-- Python crop: Y=[284:796] (512 px) from 1080 height
-- Resize: 480×170 (width × height)
+- All images resized to: 480×170 (width × height)
+- Conditional cropping based on image dimensions/aspect ratio
 
 **Model input:**
 - ONNX expects: (batch, 3, 170, 480) → CHW format
