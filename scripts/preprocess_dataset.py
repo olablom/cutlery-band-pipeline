@@ -13,9 +13,8 @@ DST = Path("dataset/processed")
 
 DST.mkdir(parents=True, exist_ok=True)
 
-# TODO: adjust these when we have final belt Y
 CROP_X0, CROP_X1 = 0, 1440
-CROP_Y0, CROP_H = 0, 512   # temporary, we can tune this
+CROP_Y0, CROP_H = 0, 512   # placeholder, adjust when we know exact belt
 TARGET_W, TARGET_H = 480, 170
 
 for img_path in SRC.rglob("*"):
