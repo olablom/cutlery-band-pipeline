@@ -14,7 +14,7 @@ DST = Path("dataset/processed")
 DST.mkdir(parents=True, exist_ok=True)
 
 CROP_X0, CROP_X1 = 0, 1440
-CROP_Y0, CROP_H = 284, 512   # adjusted for 1440x1080 sources
+CROP_Y0, CROP_H = 420, 512   # moved down ~140px to capture cutlery better
 TARGET_W, TARGET_H = 480, 170
 
 for img_path in SRC.rglob("*"):

@@ -51,12 +51,14 @@ if original_path and original_path.exists():
         import re
         with open('scripts/preprocess_dataset.py', 'r') as f:
             content = f.read()
-            match = re.search(r'CROP_Y0.*?(\d+).*?CROP_H.*?(\d+)', content)
-            if match:
-                y0, h = int(match.group(1)), int(match.group(2))
+            # Match CROP_Y0 and CROP_H values (handles comments and spacing)
+            y0_match = re.search(r'CROP_Y0.*?=\s*(\d+)', content)
+            h_match = re.search(r'CROP_H.*?=\s*(\d+)', content)
+            if y0_match and h_match:
+                y0, h = int(y0_match.group(1)), int(h_match.group(1))
                 print(f"  Current crop: Y=[{y0}:{y0+h}] from height {original.shape[0]}")
             else:
-                print(f"  Current crop: Y=[0:512] from height {original.shape[0]}")
+                print(f"  Current crop: Y=[0:512] from height {original.shape[0]} (could not read from script)")
         print(f"  If crop is wrong, edit CROP_Y0 and CROP_H in scripts/preprocess_dataset.py")
 
 print(f"\nTo view the image, open it in an image viewer:")
