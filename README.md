@@ -68,7 +68,29 @@ See `docs/pi_setup.md` for detailed Pi setup instructions.
 ## Current Status
 
 - ✅ Dataset: 1500 rig images preprocessed to 480x170 (fork/knife/spoon only)
-- ✅ Model: ResNet18 ONNX exported for 480x170 input
-- ✅ PC Benchmark: Mean 5.0ms, P95 8.0ms
+- ✅ Training scripts: Ready in `src/` (requires PyTorch with CUDA for RTX 5090)
+- ✅ Model export: Script ready in `scripts/export_trained_onnx.py`
+- ✅ PC Benchmark: Mean 5.0ms, P95 8.0ms (old model)
+- ⏳ Training: Pending (install CUDA PyTorch first)
 - ⏳ Pi Benchmark: Pending (see `docs/pi_setup.md`)
+
+## Next Steps
+
+1. **Install PyTorch with CUDA** (for RTX 5090):
+   ```bash
+   .venv/Scripts/activate
+   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+   ```
+
+2. **Train model:**
+   ```bash
+   python src/train_480x170.py
+   ```
+
+3. **Export ONNX:**
+   ```bash
+   python scripts/export_trained_onnx.py
+   ```
+
+See `docs/training_setup.md` for detailed instructions.
 
