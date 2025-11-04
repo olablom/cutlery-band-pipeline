@@ -1,5 +1,13 @@
-# Development dependencies (for model export)
-# Only needed if you want to export ONNX models from PyTorch checkpoints
+# Development dependencies (for model export and training)
+# IMPORTANT: For RTX 5090 / CUDA support, install PyTorch with CUDA separately:
+# 
+# For CUDA 12.x (RTX 5090):
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+#
+# Or for latest CUDA nightly:
+#   pip install --pre torch torchvision --index-url https://download.pytorch.org/whl/nightly/cu124
+#
+# CPU-only (fallback):
 torch>=2.0.0
 torchvision>=0.15.0
 
