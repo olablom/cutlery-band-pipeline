@@ -5,9 +5,31 @@ High-performance image processing pipeline for cutlery classification on Raspber
 ## Quick Start
 
 ### PC Setup
-1. Preprocess images: `python scripts/preprocess_dataset.py`
-2. Test inference: `python deployment/scripts/infer_fast.py dataset/processed/<bild>.jpg`
-3. Run benchmark: `python scripts/benchmark_onnx.py deployment/models/type_classifier_480x170.onnx dataset/processed/<bild>.jpg 200`
+
+1. **Setup environment:**
+   ```bash
+   python -m venv .venv
+   .venv/Scripts/activate  # Windows Git Bash/CMD
+   # or: .venv\Scripts\Activate.ps1  # PowerShell
+   pip install -r requirements.txt
+   ```
+
+2. **Preprocess images:**
+   ```bash
+   python scripts/preprocess_dataset.py
+   ```
+
+3. **Test inference:**
+   ```bash
+   python deployment/scripts/infer_fast.py dataset/processed/<bild>.jpg
+   ```
+
+4. **Run benchmark:**
+   ```bash
+   python scripts/benchmark_onnx.py deployment/models/type_classifier_480x170.onnx dataset/processed/<bild>.jpg 200
+   ```
+
+See `docs/setup.md` for detailed setup instructions.
 
 ### Pi Setup
 1. Sync to Pi: `./scripts/sync_to_pi.sh <pi-ip>` or manually via `scp`
@@ -27,6 +49,19 @@ See `docs/pi_setup.md` for detailed Pi setup instructions.
 - `reports/` - Training reports and metrics
 - `docs/` - Documentation
 - `test_images/` - Test images for validation
+
+## Image Processing Pipeline
+
+**Source format:**
+- Original images: 1440×1080
+
+**Preprocessing:**
+- Python crop: Y=[284:796] (512 px) from 1080 height
+- Resize: 480×170 (width × height)
+
+**Model input:**
+- ONNX expects: (batch, 3, 170, 480) → CHW format
+- Inference script handles resize and transpose automatically
 
 ## Current Status
 

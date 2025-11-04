@@ -45,7 +45,7 @@ if original_path and original_path.exists():
     if original is not None:
         print(f"\nOriginal image: {original_path.name}")
         print(f"  Size: {original.shape[1]}x{original.shape[0]} (width x height)")
-        print(f"  Expected: 1440x512")
+        print(f"  Expected: 1440x1080")
         print(f"\nCrop check:")
         # Read current crop params from preprocess script
         import re
