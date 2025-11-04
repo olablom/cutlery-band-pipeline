@@ -67,7 +67,7 @@ See `docs/pi_setup.md` for detailed Pi setup instructions.
 
 ## Current Status
 
-- ✅ Dataset: 1587 images preprocessed to 480x170
+- ✅ Dataset: 1500 rig images preprocessed to 480x170 (fork/knife/spoon only)
 - ✅ Model: ResNet18 ONNX exported for 480x170 input
 - ✅ PC Benchmark: Mean 5.0ms, P95 8.0ms
 - ⏳ Pi Benchmark: Pending (see `docs/pi_setup.md`)

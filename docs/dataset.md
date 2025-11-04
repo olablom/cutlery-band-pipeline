@@ -3,20 +3,20 @@
 ## Dataset v1 (Current)
 
 **Preprocessing rules:**
-- **Fall 1 - Studio/rig images** (exakt 1440×1080): Crop Y=[480:992] (512 px from lower part)
-- **Fall 2 - High-res images** (min(h,w) ≥ 2000, iPhone/DSLR): Center-crop 512 px vertically
-- **Fall 3 - Other images**: Take top 512 px
-- All images resized to: 480×170
+- Only rig/studio images from `fork/`, `knife/`, `spoon/` subdirectories
+- All are 1440×1080 → Crop Y=[480:992] (512 px from lower part)
+- Resized to: 480×170
+- iPhone/other images ignored (moved to `dataset/raw/extra_phone/`)
 
 **Source images:**
-- Total: 1586 images
-- Studio/rig: ~1500 images (1440×1080) in `fork/`, `knife/`, `spoon/` subdirectories
-- iPhone/other: 86 images in root of `dataset/raw/`
+- Total processed: 1500 images
+- All from rig/studio setup (1440×1080)
+- Distributed: `fork/`, `knife/`, `spoon/` subdirectories
 
 **Processed output:**
 - All images: 480×170 (width × height)
 - Location: `dataset/processed/`
-- Structure preserves original directory layout
+- Structure preserves original directory layout (fork/, knife/, spoon/)
 
 ## Crop Parameters
 
