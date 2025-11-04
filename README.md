@@ -53,13 +53,13 @@ See `docs/pi_setup.md` for detailed Pi setup instructions.
 ## Image Processing Pipeline
 
 **Source formats:**
-- Studio/rig images: 1440×1080 → crop Y=[480:992] (512 px from lower part)
-- Other landscape: top 512 px
-- Portrait/iPhone: center-crop 512 px vertically
+- Studio/rig images: 1440×1080 → crop Y=[160:672] (512 px, centers cutlery)
+- Only rig images from `fork/`, `knife/`, `spoon/` are processed
+- iPhone/other images excluded (moved to `dataset/raw/extra_phone/`)
 
 **Preprocessing:**
 - All images resized to: 480×170 (width × height)
-- Conditional cropping based on image dimensions/aspect ratio
+- Homogeneous dataset: 1500 rig images ready for training
 
 **Model input:**
 - ONNX expects: (batch, 3, 170, 480) → CHW format

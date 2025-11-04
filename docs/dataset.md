@@ -4,9 +4,14 @@
 
 **Preprocessing rules:**
 - Only rig/studio images from `fork/`, `knife/`, `spoon/` subdirectories
-- All are 1440×1080 → Crop Y=[480:992] (512 px from lower part)
+- All are 1440×1080 → Crop Y=[160:672] (512 px, starting 160px from top)
 - Resized to: 480×170
 - iPhone/other images ignored (moved to `dataset/raw/extra_phone/`)
+
+**Crop justification:**
+- Y0=160 centers cutlery in the processed 480×170 image
+- Cutlery appears in the belt region (middle of image), not at top or bottom
+- Can be fine-tuned to 170-180 if more "floor" is desired, but 160 is production-ready
 
 **Source images:**
 - Total processed: 1500 images
@@ -22,9 +27,10 @@
 
 ### Studio/Rig Images (1440×1080)
 ```python
-CROP_Y0 = 480  # Start from 480px from top
-CROP_H = 512   # Take 512px height
-# Result: Y=[480:992] from 1080 height
+RIG_Y0 = 160   # Start from 160px from top (centers cutlery in output)
+RIG_H = 512    # Take 512px height
+# Result: Y=[160:672] from 1080 height
+# Fine-tuning: 170-180 for more floor, but 160 is production-ready
 ```
 
 ### Other Landscape Images
