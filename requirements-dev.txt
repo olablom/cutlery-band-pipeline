@@ -1,0 +1,8 @@
+# Development dependencies (for model export)
+# Only needed if you want to export ONNX models from PyTorch checkpoints
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Core dependencies
+-r requirements.txt
+

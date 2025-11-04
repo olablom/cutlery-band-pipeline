@@ -1,0 +1,10 @@
+# Core dependencies for inference and preprocessing
+opencv-python>=4.8.0
+onnxruntime>=1.16.0
+numpy>=1.24.0
+
+# Optional: for ONNX model export (only needed if exporting models)
+# Uncomment if you need to export models:
+# torch>=2.0.0
+# torchvision>=0.15.0
+
