@@ -1,24 +1,19 @@
 {
   "type": "knife",
   "id_range": [3000, 3999],
-  "manufacturers": [
+  "manufacturer_threshold": 0.85,
+  "variants": [
     {
-      "name": "IKEA",
-      "code": "IKEA",
-      "class_id": 3001,
-      "variants": []
+      "id": 3101,
+      "name": "ikea_365"
     },
     {
-      "name": "WMF",
-      "code": "WMF",
-      "class_id": 3002,
-      "variants": []
+      "id": 3102,
+      "name": "wmf_basic"
     },
     {
-      "name": "Iittala",
-      "code": "IITTALA",
-      "class_id": 3003,
-      "variants": []
+      "id": 3103,
+      "name": "stelton_classic"
     }
   ]
 }

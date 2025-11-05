@@ -1,24 +1,19 @@
 {
   "type": "fork",
   "id_range": [2000, 2999],
-  "manufacturers": [
+  "manufacturer_threshold": 0.85,
+  "variants": [
     {
-      "name": "IKEA",
-      "code": "IKEA",
-      "class_id": 2001,
-      "variants": []
+      "id": 2101,
+      "name": "ikea_365"
     },
     {
-      "name": "WMF",
-      "code": "WMF",
-      "class_id": 2002,
-      "variants": []
+      "id": 2102,
+      "name": "wmf_basic"
     },
     {
-      "name": "Iittala",
-      "code": "IITTALA",
-      "class_id": 2003,
-      "variants": []
+      "id": 2103,
+      "name": "stelton_classic"
     }
   ]
 }

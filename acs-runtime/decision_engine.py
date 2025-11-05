@@ -7,6 +7,11 @@ import json
 import yaml
 import numpy as np
 
+from registry_utils import (
+    load_registry as load_registry_utils,
+    find_variant_match,
+)
+
 
 def load_thresholds(thresholds_path: str) -> Dict[str, Dict[str, float]]:
     """
@@ -44,6 +49,8 @@ def make_decision(
     thresholds: Dict[str, Dict[str, float]],
     plc_actions: Dict[str, str],
     registry: Dict[str, Dict[str, Any]],
+    registry_path: str,
+    features: Optional[np.ndarray] = None,
     manufacturer: Optional[str] = None,
     variant: Optional[str] = None,
 ) -> Dict[str, Any]:
@@ -53,7 +60,7 @@ def make_decision(
     System class_id mapping:
     - BACKGROUND → 9999
     - Unknown variant → 0
-    - Future: real cutlery → 2000/3000/4000 series
+    - Known variants → 2000/3000/4000 series (from registry)
     
     Args:
         class_id: Model's predicted class ID (from ONNX, not used directly)
@@ -63,17 +70,20 @@ def make_decision(
         thresholds: Threshold configuration
         plc_actions: PLC action templates
         registry: Registry dict with manufacturer mappings
+        registry_path: Path to registry directory (for loading prototypes)
+        features: Optional feature vector for variant matching
         manufacturer: Optional manufacturer code (if already known)
-        variant: Optional variant code (for future use)
+        variant: Optional variant code (if already known)
         
     Returns:
         Decision object with keys:
             - pred_type: Predicted class name
             - conf: Confidence value
             - decision_class: Decision class (e.g., "BACKGROUND_TRASH", "UNKNOWN_VARIANT", "HIGH_CONFIDENCE_SORT")
-            - class_id: System class ID (9999 for BACKGROUND, 0 for unknown, 2000-4999 for known manufacturers)
+            - class_id: System class ID (9999 for BACKGROUND, 0 for unknown, 2000-4999 for known variants)
             - target_bin: Target bin number (0 for now)
-            - manufacturer: Manufacturer code (if matched)
+            - manufacturer: Variant name (if matched)
+            - variant_score: Cosine similarity score if variant matched
     """
     bg_threshold = thresholds.get("BACKGROUND", {}).get("softmax_threshold", 0.50)
     
@@ -115,23 +125,34 @@ def make_decision(
     # Known cutlery type - check confidence threshold
     threshold = thresholds.get(class_name, {}).get("softmax_threshold", 0.85)
     
-    # Try to lookup manufacturer from registry
-    if not manufacturer:
-        manufacturer, registry_class_id = lookup_manufacturer(class_name, registry)
-    else:
-        registry_class_id = None
+    # Try to match variant using features (if available)
+    variant_name = None
+    registry_class_id = None
+    variant_score = 0.0
+    
+    if features is not None:
+        # Use cosine matching against prototypes
+        variant_name, registry_class_id, variant_score = find_variant_match(
+            features=features,
+            type_name=class_name,
+            registry_path=registry_path,
+        )
+        
+        if variant_name:
+            manufacturer = variant_name  # Use variant name as manufacturer identifier
     
     if confidence >= threshold:
         # High confidence - normal sort
-        if manufacturer and registry_class_id:
-            # Found in registry - use manufacturer class_id
+        if variant_name and registry_class_id and manufacturer:
+            # Found variant match - use variant class_id
             return {
                 "pred_type": class_name,
                 "conf": confidence,
                 "decision_class": "HIGH_CONFIDENCE_SORT",
                 "class_id": registry_class_id,  # 2000/3000/4000 series
-                "target_bin": 0,  # Will be set by registry lookup later
-                "manufacturer": manufacturer,
+                "target_bin": 0,
+                "manufacturer": variant_name,
+                "variant_score": variant_score,
             }
         elif registry.get(class_name.upper()):
             # Registry exists but no match - use unknown variant path
@@ -154,15 +175,16 @@ def make_decision(
                 "manufacturer": None,
             }
     else:
-        # Low confidence - embedding rescue (if manufacturer available)
-        if manufacturer and registry_class_id:
+        # Low confidence - embedding rescue (if variant match available)
+        if variant_name and registry_class_id:
             return {
                 "pred_type": class_name,
                 "conf": confidence,
                 "decision_class": "EMBEDDING_RESCUE",
                 "class_id": registry_class_id,  # 2000/3000/4000 series
-                "target_bin": 0,  # Will be set by registry lookup later
-                "manufacturer": manufacturer,
+                "target_bin": 0,
+                "manufacturer": variant_name,
+                "variant_score": variant_score,
             }
         else:
             return {
@@ -179,66 +201,18 @@ def load_registry(registry_path: str) -> Dict[str, Dict[str, Any]]:
     """
     Load registry files for all cutlery types.
     
+    This is a wrapper that calls registry_utils.load_registry for consistency.
+    
     Args:
         registry_path: Path to registry directory
         
     Returns:
         Dict mapping type names to registry data
     """
-    registry = {}
-    registry_dir = Path(registry_path)
-    
-    if not registry_dir.exists():
-        return registry
-    
-    for type_name in ["fork", "knife", "spoon"]:
-        registry_file = registry_dir / f"{type_name}.json"
-        if registry_file.exists():
-            try:
-                with open(registry_file, "r", encoding="utf-8") as f:
-                    registry[type_name.upper()] = json.load(f)
-            except Exception as e:
-                print(f"[decision_engine] Warning: Could not load {registry_file}: {e}")
-    
-    return registry
+    return load_registry_utils(registry_path)
 
 
-def lookup_manufacturer(
-    class_name: str,
-    registry: Dict[str, Dict[str, Any]],
-    embedding: Optional[np.ndarray] = None,
-) -> Tuple[Optional[str], Optional[int]]:
-    """
-    Look up manufacturer from registry (placeholder for future embedding matching).
-    
-    Args:
-        class_name: Predicted class name (FORK, KNIFE, SPOON)
-        registry: Registry dict loaded from JSON files
-        embedding: Optional embedding vector (for future use)
-        
-    Returns:
-        Tuple of (manufacturer_code, class_id) or (None, None) if not found
-    """
-    type_key = class_name.upper()
-    if type_key not in registry:
-        return None, None
-    
-    type_registry = registry[type_key]
-    manufacturers = type_registry.get("manufacturers", [])
-    
-    if not manufacturers:
-        return None, None
-    
-    # TODO: Future: Use embedding to match manufacturer
-    # For now, we return None to indicate no match
-    # This will be implemented when variant classifier is ready
-    # 
-    # When implemented, this should:
-    # 1. Compute embedding from image (using variant classifier)
-    # 2. Compare with embeddings in registry
-    # 3. Return best match if similarity > threshold
-    
-    return None, None
+# Note: lookup_manufacturer is deprecated - use find_variant_match from registry_utils instead
 
 
 def resolve_plc_action(decision_class: str, plc_actions: Dict[str, str], manufacturer: Optional[str] = None) -> str:

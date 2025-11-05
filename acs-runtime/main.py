@@ -144,6 +144,7 @@ def main() -> int:
     class_name = labels.get(class_id, "BACKGROUND")
     
     # Make decision (with registry lookup)
+    # Note: features=None for now - will be added when variant classifier is ready
     decision_obj = make_decision(
         class_id=class_id,
         confidence=confidence,
@@ -152,6 +153,8 @@ def main() -> int:
         thresholds=thresholds,
         plc_actions=plc_actions,
         registry=registry,
+        registry_path=registry_path,
+        features=None,  # TODO: Extract features from variant classifier when available
     )
     
     # Resolve PLC action string
