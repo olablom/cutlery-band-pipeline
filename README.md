@@ -34,9 +34,16 @@ See `docs/setup.md` for detailed setup instructions.
 ### Pi Setup
 1. Sync to Pi: `./scripts/sync_to_pi.sh <pi-ip>` or manually via `scp`
 2. Run inference: `python3 deployment/scripts/infer_fast.py dataset/processed/<bild>.jpg`
-3. Run benchmark: `python3 scripts/benchmark_onnx.py deployment/models/type_classifier_480x170.onnx dataset/processed/<bild>.jpg 200`
+3. Run benchmark (CPU): `python3 scripts/benchmark_onnx.py deployment/models/type_classifier_480x170.onnx dataset/processed/<bild>.jpg 200`
+4. Run Hailo-8 benchmark: `./scripts/run_hailo_benchmark.sh` (requires `.hef` file)
 
 See `docs/pi_setup.md` for detailed Pi setup instructions.
+
+### Building HEF Files (Hailo-8)
+
+**HEF files are built in WSL2** using Hailo Dataflow Compiler. See `BUILD_HEF.md` for the complete 3-step compilation process (parser → optimize → compiler).
+
+**Important:** Do not use Docker or other methods - use WSL2 with Hailo SDK as documented in `BUILD_HEF.md`.
 
 ## Structure
 
@@ -68,11 +75,12 @@ See `docs/pi_setup.md` for detailed Pi setup instructions.
 ## Current Status
 
 - ✅ Dataset: 1500 rig images preprocessed to 480x170 (fork/knife/spoon only)
-- ✅ Training scripts: Ready in `src/` (requires PyTorch with CUDA for RTX 5090)
-- ✅ Model export: Script ready in `scripts/export_trained_onnx.py`
-- ✅ PC Benchmark: Mean 5.0ms, P95 8.0ms (old model)
-- ⏳ Training: Pending (install CUDA PyTorch first)
-- ⏳ Pi Benchmark: Pending (see `docs/pi_setup.md`)
+- ✅ Model trained: SqueezeNet 1.1 with 99.93% accuracy (FORK: 100%, KNIFE: 100%, SPOON: 99.80%)
+- ✅ PC Benchmark (CPU): Mean 1.304ms, P95 2.268ms (2.8 MB model)
+- ✅ Pi Benchmark (CPU): Mean 1.304ms, P95 2.268ms (validated on Pi 5)
+- ✅ Model: `deployment/models/type_classifier_480x170_single.onnx` (2.9 MB, single-file, ready for deployment)
+- ✅ Hailo-8 compilation: Ready (see `BUILD_HEF.md` for WSL compilation process)
+- ⏳ Hailo-8 benchmark: Pending (requires HEF file built in WSL)
 
 ## Next Steps
 

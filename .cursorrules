@@ -1,0 +1,35 @@
+# Cursor Rules for Cutlery Band Pipeline
+
+## Hailo Build Rules (IMPORTANT)
+
+- **HEF files MUST NOT be built via Docker** in this project
+- **HEF files are built in WSL2 Ubuntu 22.04** with Hailo Dataflow Compiler 3.30.0
+- **Process:** 3-step pipeline: (1) parser → (2) optimize → (3) compiler
+- **Always run from:** `/mnt/c/Users/olabl/Documents/GitHub/cutlery-band-pipeline`
+- **ONNX models missing kernel_shape** should be fixed with `fix_kernel_shape.py` first
+- **Output goes to:** `./hef/`
+- **When suggesting code:** Assume HEF already exists in `./hef/` and is named `cutlery_hailo.hef` or `type_classifier_480x170.hef`
+
+**Details:** See `BUILD_HEF.md` for complete compilation process.
+
+## Project Structure
+
+- `acs-runtime/` - Runtime code for Pi deployment
+- `deployment/models/` - ONNX models
+- `hef/` - Compiled HEF files (built in WSL, deployed to Pi)
+- `scripts/` - Build and utility scripts
+- `docs/` - Documentation
+
+## Development Workflow
+
+1. **Train model** → Export ONNX to `deployment/models/`
+2. **Build HEF in WSL** → See `BUILD_HEF.md`
+3. **Deploy to Pi** → `scp` HEF to Pi, update `runtime_config.yaml`
+4. **Test on Pi** → Run `acs-runtime/main.py`
+
+## Code Assumptions
+
+- Hailo backend assumes HEF file exists in `models/type_classifier.hef` on Pi
+- ONNX backend is default and works without Hailo
+- Both backends produce identical output format
+

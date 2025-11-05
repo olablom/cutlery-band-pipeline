@@ -13,3 +13,6 @@ env/
 ENV/
 .venv/
 *.log
+# Hailo build artifacts (keep final HEF, ignore intermediate HAR files)
+hef/*.har
+*.har
