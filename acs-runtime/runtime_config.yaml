@@ -1,0 +1,16 @@
+# Inference backend: "onnx" or "hailo"
+inference_backend: "onnx"
+
+# Model paths (backend-specific)
+model_path: "models/type_classifier.onnx"
+hef_path: "models/type_classifier.hef"  # For Hailo backend
+labels_path: "models/type_labels.json"
+
+# Configuration paths
+thresholds_path: "config/thresholds.yaml"
+plc_actions_path: "config/plc_actions.yaml"
+
+# Output paths
+log_path: "logs/inference_log.jsonl"
+registry_path: "registry"
+

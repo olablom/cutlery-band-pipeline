@@ -1,0 +1,25 @@
+{
+  "type": "knife",
+  "id_range": [3000, 3999],
+  "manufacturers": [
+    {
+      "name": "IKEA",
+      "code": "IKEA",
+      "class_id": 3001,
+      "variants": []
+    },
+    {
+      "name": "WMF",
+      "code": "WMF",
+      "class_id": 3002,
+      "variants": []
+    },
+    {
+      "name": "Iittala",
+      "code": "IITTALA",
+      "class_id": 3003,
+      "variants": []
+    }
+  ]
+}
+

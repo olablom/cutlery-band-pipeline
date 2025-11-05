@@ -1,0 +1,25 @@
+{
+  "type": "fork",
+  "id_range": [2000, 2999],
+  "manufacturers": [
+    {
+      "name": "IKEA",
+      "code": "IKEA",
+      "class_id": 2001,
+      "variants": []
+    },
+    {
+      "name": "WMF",
+      "code": "WMF",
+      "class_id": 2002,
+      "variants": []
+    },
+    {
+      "name": "Iittala",
+      "code": "IITTALA",
+      "class_id": 2003,
+      "variants": []
+    }
+  ]
+}
+

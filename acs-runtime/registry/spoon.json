@@ -1,0 +1,25 @@
+{
+  "type": "spoon",
+  "id_range": [4000, 4999],
+  "manufacturers": [
+    {
+      "name": "IKEA",
+      "code": "IKEA",
+      "class_id": 4001,
+      "variants": []
+    },
+    {
+      "name": "WMF",
+      "code": "WMF",
+      "class_id": 4002,
+      "variants": []
+    },
+    {
+      "name": "Iittala",
+      "code": "IITTALA",
+      "class_id": 4003,
+      "variants": []
+    }
+  ]
+}
+
